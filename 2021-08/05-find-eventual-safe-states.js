@@ -3,24 +3,28 @@
  * @return {number[]}
  */
 var eventualSafeNodes = function (graph) {
+    const n = graph.length;
+    const rg = new Array(n).fill(0).map(() => new Array());
     const res = [];
     let pre = 0;
-    graph = graph.map((item, i) => [i,item])
+    for (let x = 0; x < n; ++x) {
+        for (let y of graph[x]) {
+            rg[y].push(x);
+        }
+        if (graph[x].length === 0) {
+            res.push(x)
+        }
+    }
     while (true) {
         const len = res.length
-        for (let i = 0; i < graph.length; ) {
-            for (let j = pre; j < len; j++){
-                const item = res[j]
-                if (graph[i][1].includes(item)) {
-                    graph[i][1].splice(graph[i][1].indexOf(item), 1)
+        for (let j = pre; j < len; j++){
+            const dist = res[j]
+            rg[dist].forEach(item => {
+                graph[item].splice(graph[item].indexOf(dist), 1)
+                if (graph[item].length === 0) {
+                    res.push(item)
                 }
-            }
-            if (graph[i][1].length === 0) {
-                res.push(graph[i][0])
-                graph.splice(i,1)
-            } else {
-                i++
-            }
+            })
         }
         if (res.length === len) {
             break;
