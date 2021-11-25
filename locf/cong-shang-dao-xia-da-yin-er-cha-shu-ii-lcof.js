@@ -7,20 +7,24 @@
  */
 /**
  * @param {TreeNode} root
- * @return {number[]}
+ * @return {number[][]}
  */
 var levelOrder = function (root) {
   const ans = []
   const level = []
   root && level.push(root)
-  while (level.length > 0) {
+  while (level.length) {
     const len = level.length
-    for (let i = 0; i < len; i++) {
+    const a = []
+    for (let i = 0; i < len; i++){
       const node = level.shift()
-      ans.push(node?.val)
-      node.left && level.push(node.left)
-      node.right && level.push(node.right)
+      if (node) {
+        a.push(node.val)
+        node.left && level.push(node.left)
+        node.right && level.push(node.right)
+      }
     }
+    ans.push(a)
   }
   return ans
 };
