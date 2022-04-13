@@ -17,7 +17,7 @@
    return res
  };
 
- var reversePairs = function(nums) {
+ var reversePairs2 = function(nums) {
    const len = nums.length;
    let res = 0;
    const arr = new Array(len).fill(0).map((val, i) => i)
@@ -56,4 +56,46 @@
    }
    return res
  };
-console.log(reversePairs([4,5,6,7]))
+
+// 我觉得需要用hash
+// 或者动态规划？ 不能是动态规划，根本推到不出来规律
+
+// omg 是什么分治
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var reversePairs = function (nums) {
+  const mergeSort = (start, end)=>{
+    if (start >= end) {
+      return 0
+    }
+    const mid = Math.floor((start + end) / 2)
+    let res = mergeSort(start, mid) + mergeSort(mid + 1, end)
+    const temp = nums.slice(start,end+1)
+    let i = start, j = 0, k = mid-start+1
+    while (i<=end) {
+      if (j < k && temp[j] > temp[k]) {
+        res += mid - start + 1 - j
+        nums[i] = temp[k]
+        k++
+      } else if(j <= mid-start){
+        nums[i] = temp[j]
+        j++
+      } else {
+        nums[i] = temp[k]
+        k++
+      }
+      i++
+    }
+    return res
+  }
+  return mergeSort(0,nums.length-1)
+};
+
+
+// console.log(reversePairs([7,5,6,4]))
+// console.log(reversePairs([4,5,6,7]))
+console.log(reversePairs([233,2001,234,2006,235,2003,236,2007,237,2002,2005,233,233,233,233,233,2004]))
+console.log(reversePairs([1,3,2,3,1]))
